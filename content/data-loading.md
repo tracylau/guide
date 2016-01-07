@@ -146,11 +146,11 @@ If you're publishing a subset of your data, it might be tempting to simply query
 
 But if you do this, then you open yourself up to problems if another subscription pushes data into the same collection, since the data returned by `Lists.find()` might not be what you expected anymore. In an actively developed application, it's often hard to anticipate what may change in the future and this can be a source of hard to understand bugs.
 
-Also, when changing between subscriptions, there is a brief period where both subscriptions are loaded (see [Publication behavior when changing arguments](#publication-behavior-with-arguments) below), so when doing thing like pagination, it's exceedingly likely that this will be the case.
+Also, when changing between subscriptions, there is a brief period where both subscriptions are loaded (see [Publication behavior when changing arguments](#publication-behavior-with-arguments) below), so when doing things like pagination, it's exceedingly likely that this will be the case.
 
 <h4 id="fetch-near-subscribe">Fetch the data nearby where you subscribed to it</h4>
 
-We do this for the same reason we subscribe in the component in the first place---to avoid action at a distance and to make it easier to understand where data comes from. A common pattern is to fetch the data in a parent template, and then pass it into a "pure" child component, as we'll see in in the [UI Article](ui-ux.html#components).
+We do this for the same reason we subscribe in the component in the first place---to avoid action at a distance and to make it easier to understand where data comes from. A common pattern is to fetch the data in a parent template, and then pass it into a "pure" child component, as we'll see in the [UI Article](ui-ux.html#components).
 
 Note that there are some exceptions to this second rule. A common one is `Meteor.user()`---although this is strictly speaking subscribed to (automatically usually), it's typically over-complicated to pass it through the component hierarchy as an argument to each component. However keep in mind it's best not to use it in too many places as it makes components harder to test.
 
@@ -166,7 +166,7 @@ Across Meteor applications, there are some common patterns of data loading and m
 
 <h3 id="readiness">Subscription readiness</h3>
 
-It is key to understand that a subscription will not instantly provide its data. There will be a latency between subscribing to the data on the client and it arriving from the publication on the server. You should also be aware that this delay may be a lot longer for your users in production that for you locally in development!
+It is key to understand that a subscription will not instantly provide its data. There will be a latency between subscribing to the data on the client and it arriving from the publication on the server. You should also be aware that this delay may be a lot longer for your users in production than for you locally in development!
 
 Although the Tracker system means you often don't *need* to think too much about this in building your apps, usually if you want to get the user experience right, you'll need to know when the data is ready.
 
@@ -251,7 +251,7 @@ Meteor.publish('Todos.inList', function(listId, limit) {
 
 It's important that we set a `sort` parameter on our query (to ensure a repeatable order of list items as more pages are requested), and that we set an absolute maximum on the number of items a user can request (at least in the case where lists can grow without bound).
 
-Then on the client side, we'd some kind of reactive state variable to control how many items to request:
+Then on the client side, we'd use some kind of reactive state variable to control how many items to request:
 
 ```js
 Template.Lists_show_page.onCreated(function() {
@@ -266,7 +266,7 @@ Template.Lists_show_page.onCreated(function() {
 
 We'd increment that `requestedTodos` variable when the user clicks "load more" (or perhaps just when they scroll to the bottom of the page).
 
-Once piece of information that's very useful to know when paginating data is the *total number of items* that you could see. The [`tmeasday:publish-counts`](https://atmospherejs.com/tmeasday/publish-counts) package can be useful to publish this. We could add a `Lists.todoCount` publication like so
+One piece of information that's very useful to know when paginating data is the *total number of items* that you could see. The [`tmeasday:publish-counts`](https://atmospherejs.com/tmeasday/publish-counts) package can be useful to publish this. We could add a `Lists.todoCount` publication like so
 
 ```js
 Meteor.publish('Lists.todoCount', function({ listId }) {
@@ -286,7 +286,7 @@ Counts.get(`Lists.todoCount.${listId}`)
 
 <h2 id="stores">Client-side data with reactive stores</h2>
 
-In Meteor, persistent or shared data comes over the wire on publications. However, there are some types of data which doesn't need to be persistent or shared between users. For instance, the "logged-in-ness" of the current user, or the route they are currently viewing.
+In Meteor, persistent or shared data comes over the wire on publications. However, there are some types of data which don't need to be persistent or shared between users. For instance, the "logged-in-ness" of the current user, or the route they are currently viewing.
 
 Although client-side state is often best contained as state of an individual template (and passed down the template hierarchy as arguments where necessary), sometimes you have a need for "global" state that is shared between unrelated sections of the template hierarchy.
 
